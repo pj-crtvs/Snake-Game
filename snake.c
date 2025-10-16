@@ -35,7 +35,7 @@ int menu_option (int a) {
         printf("Exiting the game.");
         return 0;
     } else {
-        printf("%d is not an option. Option: ");
+        printf("%d is not an option. Option: ", a);
         int b;
         scanf("%d", &b);
         return menu_option (b);
@@ -47,7 +47,7 @@ int mode_option (int a){
     } else if (a==2){
         difficult();
     } else {
-        printf("%d is not an option. Option: ");
+        printf("%d is not an option. Option: ", a);
         int b;
         scanf("%d", &b);
         return mode_option (b);
@@ -67,7 +67,7 @@ void instructions () {
     if (a==1) {
         main();
     } else {
-        printf("%d is not an option.\n");
+        printf("%d is not an option.\n", a);
         return instructions();
     }
 }
