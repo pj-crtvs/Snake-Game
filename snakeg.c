@@ -76,7 +76,11 @@ void mode()
     switch (diff_opt)
     {
     case 1:
+        printf(BGRN "\nEASY MODE\n" reset);
+        border(diff_opt);
+        break;
     case 2:
+        printf(BBLU "\nDIFFICULT MODE\n" reset);
         border(diff_opt);
         break;
     case 3:
@@ -92,7 +96,7 @@ void mode()
 // prints instructions and takes input to return to menu
 void instructions()
 {
-    printf(BYEL "INSTRUCTIONS\n" reset);
+    printf(BYEL "\nINSTRUCTIONS\n" reset);
     printf(BBLU "\nNAVIGATION:" reset
                 "\nTo control the snake, press:\n"
                 "       - [W] to move UP         - [S] to move DOWN\n"
@@ -165,7 +169,7 @@ void randomcoor()
 // takes input for the number of blocks
 void blocks()
 {
-    printf("Input the number of blocks between 5-15: ");
+    printf("Input the number of " BRED "blocks" reset " between 5-15: ");
     int B;
     scanf("%d", &B);
     srand(time(NULL));
@@ -204,7 +208,7 @@ void blocks()
 void food()
 {
     // takes input for the number of food just like in blocks
-    printf("Input the number of food between 1-10: ");
+    printf("Input the number of " BGRN "food" reset " between 1-10: ");
     int foodnum;
     scanf("%d", &foodnum);
     srand(time(NULL));
@@ -219,9 +223,7 @@ void food()
             {
                 // repeats random generate of coordinates while coordinates are not equal to space
                 randomcoor();
-            }
-
-            while (board[i][j] != ' ');
+            } while (board[i][j] != ' ');
             board[i][j] = 'F'; // sets space value to foodnum
         }
 
@@ -318,8 +320,7 @@ void body(int foodnum, int snake_x[], int snake_y[], char move)
     /*updates coordinates of head and body,
     e.g., if F=3 (input food is 1 + 2)
     c = 3, snake_x[c-1] = snake_x[c-2]
-    -> snake_x[2] = snake_x[1]
-    */
+    -> snake_x[2] = snake_x[1]*/
     for (int c = foodnum; c >= 2; c--)
     {
         snake_x[c - 1] = snake_x[c - 2];
@@ -330,16 +331,17 @@ void body(int foodnum, int snake_x[], int snake_y[], char move)
     j = snake_y[0];
     if (board[7][13] == 'o')
     {
+        // if the head is still existing inside the whole board
         for (int r = 1; r < 14; r++)
         {
             for (int c = 1; c < 14; c++)
             {
-                if (board[r][c] != '@')
+                if (board[r][c] != '@') // if there is no existing head
                 {
                     exit_phase = 0 + 1;
                     continue;
                 }
-                else if (board[r][c] == '@')
+                else if (board[r][c] == '@') // if there exist a head
                 {
                     exit_phase = 0;
                     map(foodnum, snake_x, snake_y);
@@ -359,7 +361,6 @@ void map(int foodnum, int snake_x[], int snake_y[])
         {
             board[7][14] = '$';
         }
-
         // clears blocks in board
         for (i = 0; i < 15; i++)
         {
@@ -372,6 +373,8 @@ void map(int foodnum, int snake_x[], int snake_y[])
             }
         }
     }
+
+    printf("\n");
 
     // prints board with colors, red for walls and blocks, green for food, blue for body and yellow for portal
     for (i = 0; i < 15; i++)
@@ -405,7 +408,8 @@ void map(int foodnum, int snake_x[], int snake_y[])
     printf("Points: %d\n", score);
     printf("W/A/S/D to move or M to go back to Menu\n");
 
-    int check = 0; // value checking for win status
+    int check = 0;
+    // value checking for win status
     for (i = 1; i < 14; i++)
     {
         // checks only index of playing board
@@ -476,12 +480,13 @@ void exit_check(int foodnum, int snake_x[], int snake_y[])
     default:
         n = sizeof(move); // converts character into number for errorhandling
         errorhandling(n);
-        board[i][j] = '@';
+        board[i][j] = 'o';
         map(foodnum, snake_x, snake_y);
         break;
     }
     body(foodnum, snake_x, snake_y, move);
 }
+
 void movement(int foodnum, int snake_x[], int snake_y[])
 {
     // takes input for movement
