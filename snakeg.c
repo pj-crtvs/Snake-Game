@@ -31,8 +31,9 @@ int main()
     // resets all values and prints and takes value for menu
     snake_length = 0;
     score = 0;
-    printf(BYEL "\nThe Snake Game\n"
-                "Choose an option\n" COLOR_RESET BBLU "[1] Start\n" COLOR_RESET BRED "[2] Instructions\n" COLOR_RESET BGRN "[3] Exit\n" COLOR_RESET);
+
+    printf(BYEL "\nThe Snake Game\nChoose an option\n" COLOR_RESET BGRN "[1] Start\n" COLOR_RESET BBLU "[2] Instructions\n" COLOR_RESET BRED "[3] Exit\n" COLOR_RESET);
+
     int menu_opt;
     scanf("%d", &menu_opt);
     switch (menu_opt)
@@ -87,21 +88,25 @@ void mode()
 // prints instructions and takes input to return to menu
 void instructions()
 {
-    printf("Instructions\n"
-           "Navigation\n"
-           "Press W to go up\n"
-           "Press A to go left\n"
-           "Press S to go down\n"
-           "Press D to go right\n\n"
-           "Easy Mode\n"
-           "Before the game starts, the player is asked to input the number of food between 1-10 that they want to place on the map.\n"
-           "Once the game starts, the player navigates through the map and collects all the food (F). Each food eaten adds one body to the snake. When all the food has been eaten, an exit will open. The player wins when the whole snake exits the map.\n"
-           "Hitting the walls or the snake's own body will end the game.\n\n"
-           "Difficult Mode\n"
-           "Before the game starts, the player is asked to input the number of food between 1-10 and the number of blocks between 5-15 that they want to place on the map.\n"
-           "Once the game starts, the player navigates through the map and collects all the food (F). Each food eaten adds one body to the snake. When all the food has been eaten, an exit will open. The player wins when the whole snake exits the map.\n"
-           "Hitting the walls, the snake's own body, or the blocks (B) will end the game.\n\n"
-           "Press 1 Back\n");
+    printf(YELB "Instructions\n" reset);
+    printf(BLUHB "\nNAVIGATION:" reset
+                 "\nTo control the snake, press:\n"
+                 "       - [W] to move UP         - [S] to move DOWN\n"
+                 "       - [A] to move LEFT       - [D] to move RIGHT\n");
+    printf(BLUHB "\n GAMEPLAY: " reset BGRN "\nYOU WIN" reset
+                 " when your snake:"
+                 "\n       1. Collect all the food [F] and the LAST TAIL element successfully exits through the portal [$].\n\n" BRED "YOU LOSE" reset
+                 " when your snake hits:"
+                 "\n       1. Its own body \n"
+                 "       2. Borders [#] \n"
+                 "       3. Blocks [B]\n");
+    printf(BLUHB "\n TWO MODES: " reset BGRN "\n1. Easy Mode" reset
+                 "\n     - [B] No blocks for this mode"
+                 "\n     - [F] You will be asked to input how many food items to spawn (1 to 10)"
+                 "\n     - Each food you consume will add +1 length to your snake and increase your score.\n" BRED "2. Difficult Mode" reset
+                 "\n     - [B] You will be asked to input how many blocks to spawn (5 to 15)."
+                 "\n     - [F] You will be asked to input how many food items to spawn (1 to 10)"
+                 "\n     - Each food you consume will add +1 length to your snake and increase your score.\n\n");
 
     int instruct_opt;
     scanf("%d", &instruct_opt);
@@ -136,7 +141,7 @@ void border(int diff_opt)
         }
     }
     if (diff_opt == 1)
-    { 
+    {
         // separates input taking for easy mode and difficult mode
         food(); // easy mode
     }
@@ -161,17 +166,22 @@ void blocks()
     scanf("%d", &B);
     srand(time(NULL));
     if (B >= 5 && B <= 15)
-    { // checks if input is between 5-15
+    {
+        // checks if input is between 5-15
         for (int c = 0; c < B; c++)
-        { // increments c to place blocks equal to input B
+        {
+            // increments c to place blocks equal to input B
             do
-            { // repeats random coordinate generating while the generated coordinates are not a space
+            {
+                // repeats random coordinate generating while the generated coordinates are not a space
                 randomcoor();
             } while (board[i][j] != ' ');
+
             board[i][j] = 'B'; // sets B as value for the space generated coordinates
         }
         if (board[1][1] == 'B')
-        { // removes B value at origin of head and generates another coordinate of space
+        {
+            // removes B value at origin of head and generates another coordinate of space
             do
             {
                 randomcoor();
@@ -194,6 +204,7 @@ void food()
     int F;
     scanf("%d", &F);
     srand(time(NULL));
+
     if (F >= 1 && F <= 10)
     {
         // checks if input is between 1-10
@@ -204,9 +215,12 @@ void food()
             {
                 // repeats random generate of coordinates while coordinates are not equal to space
                 randomcoor();
-            } while (board[i][j] != ' ');
+            }
+
+            while (board[i][j] != ' ');
             board[i][j] = 'F'; // sets space value to F
         }
+
         if (board[1][1] == 'F')
         {
             // removes F value at origin of head and generates new space coordinate
@@ -215,8 +229,10 @@ void food()
                 randomcoor();
             } while (board[i][j] != ' ');
         }
+
         head(F);
     }
+
     else
     {
         errorhandling(F);
@@ -240,7 +256,7 @@ void body(int F, int snake_x[], int snake_y[])
     // updates the body and head
     i = snake_x[0];
     j = snake_y[0]; // takes first element of array of the snake as the coordinates
-    
+
     if (i == 1 && j == 1)
     {
         // inputs @ at the origin
@@ -284,17 +300,17 @@ void body(int F, int snake_x[], int snake_y[])
     {
         // if snake_x[0] and snake_y[0] coordinates are equal to the portal $, body is lessened
         for (int c = 0; c < F - 1; c++)
-        { 
+        {
             // place index c into body array and shifts elements from F-1 to 0
             snake_x[c] = snake_x[c + 1];
             snake_y[c] = snake_y[c + 1];
-        } 
-        
+        }
+
         // decrements size of array and snake_length
         F--;
         snake_length--;
     }
-    
+
     /*updates coordinates of head and body,
     e.g., if F=3 (input food is 1 + 2)
     c = 3, snake_x[c-1] = snake_x[c-2]
@@ -327,8 +343,8 @@ void map(int F, int snake_x[], int snake_y[])
                 }
             }
         }
-    } 
-    
+    }
+
     // prints board with colors, red for walls and blocks, green for food, blue for body and yellow for portal
     for (i = 0; i < 15; i++)
     {
@@ -344,11 +360,11 @@ void map(int F, int snake_x[], int snake_y[])
             }
             else if (board[i][j] == '$')
             {
-                printf(BYEL " %c" COLOR_RESET, board[i][j]);
+                printf(BGRN " %c" COLOR_RESET, board[i][j]);
             }
             else if (board[i][j] == '@' || board[i][j] == 'o')
             {
-                printf(BBLU " %c" COLOR_RESET, board[i][j]);
+                printf(BYEL " %c" COLOR_RESET, board[i][j]);
             }
             else
             {
@@ -357,8 +373,9 @@ void map(int F, int snake_x[], int snake_y[])
         }
         printf("\n");
     }
+
     printf("Points: %d\n", score);
-    printf("W/A/S/D to move or M to Exit to Menu\n");
+    printf("W/A/S/D to move or M to go back to Menu\n");
     int check = 0; // value checking for win status
     for (i = 1; i < 14; i++)
     { // checks only index of playing board
