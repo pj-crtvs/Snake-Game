@@ -12,25 +12,29 @@ void food();
 void blocks();
 void randomcoor();
 void head(int F);
-void body(int F, int snake_x[], int snake_y[]);
+void body(int F, int snake_x[], int snake_y[], char move);
 void map(int F, int snake_x[], int snake_y[]);
 void movement(int F, int snake_x[], int snake_y[]);
 void gameover();
 void win();
 void playagain();
 void exitgame();
+void exit_check(int F, int snake_x[], int snake_y[]);
 
 // global variables
 int i, j;
+int exit_phase = 0;
 int snake_length = 0;
 int score = 0;
 char board[15][15];
+char move;
 
 int main()
 {
     // resets all values and prints and takes value for menu
     snake_length = 0;
     score = 0;
+    exit_phase = 0;
 
     printf(BYEL "\nThe Snake Game\nChoose an option\n" COLOR_RESET BGRN "[1] Start\n" COLOR_RESET BBLU "[2] Instructions\n" COLOR_RESET BRED "[3] Exit\n" COLOR_RESET);
 
@@ -248,10 +252,10 @@ void head(int F)
     int snake_y[F];
     snake_x[0] = 1;
     snake_y[0] = 1;
-    body(F, snake_x, snake_y);
+    body(F, snake_x, snake_y, move);
 }
 
-void body(int F, int snake_x[], int snake_y[])
+void body(int F, int snake_x[], int snake_y[], char move)
 {
     // updates the body and head
     i = snake_x[0];
@@ -296,7 +300,6 @@ void body(int F, int snake_x[], int snake_y[])
 
     i = snake_x[0];
     j = snake_y[0]; // inputs updated coordinates of snake_x[0] and snake_y[0] into i and j
-
     if (i == 7 && j == 14)
     {
         // if snake_x[0] and snake_y[0] coordinates are equal to the portal $, body is lessened
@@ -322,21 +325,38 @@ void body(int F, int snake_x[], int snake_y[])
         snake_x[c - 1] = snake_x[c - 2];
         snake_y[c - 1] = snake_y[c - 2];
     }
-
+    i = snake_x[0];
+    j = snake_y[0];
+    if (board[7][13] == 'o')
+    {
+        for (int r = 1; r < 14; r++)
+        {
+            for (int c = 1; c < 14; c++)
+            {
+                if (board[r][c] != '@')
+                {
+                    exit_phase = 0 + 1;
+                    continue;
+                }
+                else if (board[r][c] == '@')
+                {
+                    exit_phase = 0;
+                    map(F, snake_x, snake_y);
+                }
+            }
+        }
+    }
     map(F, snake_x, snake_y);
 }
 
 void map(int F, int snake_x[], int snake_y[])
 {
     if (F == snake_length + 2)
-    { 
-        // changes board[7][14] value into $ when it is not equal to head or body
+    { // changes board[7][14] value into $ when it is not equal to head or body
         if (board[7][14] != '@' || board[7][14] != 'o')
         {
             board[7][14] = '$';
-        } 
-        
-        // clears blocks in board
+        } // clears blocks in board
         for (i = 0; i < 15; i++)
         {
             for (j = 0; j < 15; j++)
@@ -401,9 +421,52 @@ void map(int F, int snake_x[], int snake_y[])
     {
         win(); // proceeds to win statement
     }
-    movement(F, snake_x, snake_y);
+    printf("%d\n", exit_phase);
+    if (exit_phase == 0)
+    {
+        movement(F, snake_x, snake_y);
+    }
+    else if (exit_phase == 1)
+    {
+        exit_check(F, snake_x, snake_y);
+    }
 }
 
+void exit_check(int F, int snake_x[], int snake_y[])
+{
+    char move;
+    scanf(" %c", &move);
+    int n;
+    i = snake_x[0];
+    j = snake_y[0];
+    board[i][j] = ' ';
+    switch (move)
+    {
+    case 'W':
+    case 'w':
+    case 'A':
+    case 'a':
+    case 'S':
+    case 's':
+        gameover();
+        break;
+    case 'D':
+    case 'd':
+        snake_y[0]++;
+        break;
+    case 'M':
+    case 'm':
+        main(); // returns to menu
+        break;
+    default:
+        n = sizeof(move); // converts character into number for errorhandling
+        errorhandling(n);
+        board[i][j] = '@';
+        map(F, snake_x, snake_y);
+        break;
+    }
+    body(F, snake_x, snake_y, move);
+}
 void movement(int F, int snake_x[], int snake_y[])
 {
     // takes input for movement
@@ -413,66 +476,38 @@ void movement(int F, int snake_x[], int snake_y[])
     i = snake_x[0];
     j = snake_y[0];
     board[i][j] = ' '; // clears previous position of head
-
-    if (i == 7 && j == 13)
+    // movement if snake_x[0] and snake_y[0] is not at portal
+    switch (move)
     {
-        // sets to gameover if snake is in front of portal and user does not press d/D
-        switch (move)
-        {
-        case 'W':
-        case 'w':
-        case 'A':
-        case 'a':
-        case 'S':
-        case 's':
-            gameover();
-            break;
-        case 'M':
-        case 'm':
-            main(); // returns to menu
-            break;
-        default:
-            n = sizeof(move); // converts character into number for errorhandling
-            errorhandling(n);
-            break;
-        }
+    // updates position based on movement
+    case 'W':
+    case 'w':
+        snake_x[0]--;
+        break;
+    case 'A':
+    case 'a':
+        snake_y[0]--;
+        break;
+    case 'S':
+    case 's':
+        snake_x[0]++;
+        break;
+    case 'D':
+    case 'd':
+        snake_y[0]++;
+        break;
+    case 'M':
+    case 'm':
+        main(); // returns to menu
+        break;
+    default:
+        n = sizeof(move); // converts character into number for errorhandling
+        errorhandling(n);
+        board[i][j] = '@';
+        map(F, snake_x, snake_y);
+        break;
     }
-    else
-    {
-        // movement if snake_x[0] and snake_y[0] is not at portal
-        switch (move)
-        {
-        // updates position based on movement
-        case 'W':
-        case 'w':
-            snake_x[0]--;
-            break;
-        case 'A':
-        case 'a':
-            snake_y[0]--;
-            break;
-        case 'S':
-        case 's':
-            snake_x[0]++;
-            break;
-        case 'D':
-        case 'd':
-            snake_y[0]++;
-            break;
-        case 'M':
-        case 'm':
-            main(); // returns to menu
-            break;
-        default:
-            n = sizeof(move); // converts character into number for errorhandling
-            errorhandling(n);
-            board[i][j] = '@';
-            map(F, snake_x, snake_y);
-            break;
-        }
-    }
-
-        body(F, snake_x, snake_y);
+    body(F, snake_x, snake_y, move);
 }
 
 void win()
@@ -492,10 +527,10 @@ void playagain()
 {
     printf(BYEL "\nDo you want to play again?\n" reset BGRN "[1] Yes\n" reset BRED "[2] Exit\n" reset);
 
-    int play_again;
-    scanf("%d", &play_again);
+    int a;
+    scanf("%d", &a);
 
-    switch (play_again)
+    switch (a)
     {
     case 1:
         main();
@@ -504,7 +539,7 @@ void playagain()
         exitgame();
         break;
     default:
-        errorhandling(play_again);
+        errorhandling(a);
         playagain();
         break;
     }
