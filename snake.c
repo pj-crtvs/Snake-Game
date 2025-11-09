@@ -449,7 +449,7 @@ void exit_check(int F, int snake_x[], int snake_y[]){
         default:
             n = sizeof(move); // converts character into number for errorhandling
             errorhandling(n);
-            board[i][j] = '@';
+            board[i][j] = 'o';
             map(F, snake_x, snake_y);
             break;
         }
