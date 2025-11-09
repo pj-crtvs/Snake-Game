@@ -281,7 +281,7 @@ void body(int F, int snake_x[], int snake_y[])
     i = snake_x[0];
     j = snake_y[0]; // inputs updated coordinates of snake_x[0] and snake_y[0] into i and j
     if (i == 7 && j == 14)
-    { 
+    {
         // if snake_x[0] and snake_y[0] coordinates are equal to the portal $, body is lessened
         for (int c = 0; c < F - 1; c++)
         { 
