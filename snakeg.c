@@ -296,6 +296,7 @@ void body(int F, int snake_x[], int snake_y[])
 
     i = snake_x[0];
     j = snake_y[0]; // inputs updated coordinates of snake_x[0] and snake_y[0] into i and j
+
     if (i == 7 && j == 14)
     {
         // if snake_x[0] and snake_y[0] coordinates are equal to the portal $, body is lessened
@@ -328,11 +329,14 @@ void body(int F, int snake_x[], int snake_y[])
 void map(int F, int snake_x[], int snake_y[])
 {
     if (F == snake_length + 2)
-    { // changes board[7][14] value into $ when it is not equal to head or body
+    { 
+        // changes board[7][14] value into $ when it is not equal to head or body
         if (board[7][14] != '@' || board[7][14] != 'o')
         {
             board[7][14] = '$';
-        } // clears blocks in board
+        } 
+        
+        // clears blocks in board
         for (i = 0; i < 15; i++)
         {
             for (j = 0; j < 15; j++)
@@ -467,7 +471,8 @@ void movement(int F, int snake_x[], int snake_y[])
             break;
         }
     }
-    body(F, snake_x, snake_y);
+
+        body(F, snake_x, snake_y);
 }
 
 void win()
@@ -487,10 +492,10 @@ void playagain()
 {
     printf(BYEL "\nDo you want to play again?\n" reset BGRN "[1] Yes\n" reset BRED "[2] Exit\n" reset);
 
-    int a;
-    scanf("%d", &a);
+    int play_again;
+    scanf("%d", &play_again);
 
-    switch (a)
+    switch (play_again)
     {
     case 1:
         main();
@@ -499,7 +504,7 @@ void playagain()
         exitgame();
         break;
     default:
-        errorhandling(a);
+        errorhandling(play_again);
         playagain();
         break;
     }
