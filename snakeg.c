@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "ANSI-color-codes.h"
+#include "ANSI-color-codes.h" //for color
 
 // functions to be called
 void errorhandling(int a);
@@ -97,14 +97,14 @@ void instructions()
                 "\nTo control the snake, press:\n"
                 "       - [W] to move UP         - [S] to move DOWN\n"
                 "       - [A] to move LEFT       - [D] to move RIGHT\n");
-    printf(BBLU "\n GAMEPLAY: " reset BGRN "\nYOU WIN" reset
+    printf(BBLU "\nGAMEPLAY: " reset BGRN "\nYOU WIN" reset
                 " when your snake:"
                 "\n       1. Collect all the food [F] and the LAST TAIL element successfully exits through the portal [$].\n\n" BRED "YOU LOSE" reset
                 " when your snake hits:"
                 "\n       1. Its own body \n"
                 "       2. Borders [#] \n"
                 "       3. Blocks [B]\n");
-    printf(BBLU "\n TWO MODES: " reset BGRN "\n1. Easy Mode" reset
+    printf(BBLU "\nTWO MODES: " reset BGRN "\n1. Easy Mode" reset
                 "\n     - [B] No blocks for this mode"
                 "\n     - [F] You will be asked to input how many food items to spawn (1 to 10)"
                 "\n     - Each food you consume will add +1 length to your snake and increase your score.\n" BRED "2. Difficult Mode" reset
