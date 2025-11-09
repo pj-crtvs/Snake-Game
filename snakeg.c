@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <ANSI-color-codes.h>
+#include <"ANSI-color-codes.h">
 
 // functions to be called
 void errorhandling(int a);
@@ -26,10 +26,9 @@ int snake_length = 0;
 int score = 0;
 char board[15][15];
 
-// takes the value as string and makes sure printing does not repeat infinitely when a wrong character/number is pressed
-
 int main()
-{ // resets all values and prints and takes value for menu
+{
+    // resets all values and prints and takes value for menu
     snake_length = 0;
     score = 0;
     printf(BYEL "\nThe Snake Game\n"
@@ -40,17 +39,22 @@ int main()
     {
     case 1:
         mode();
+        break;
     case 2:
         instructions();
+        break;
     case 3:
         exitgame();
+        break;
     default:
         errorhandling(menu_opt);
         main();
+        break;
     }
     return 0;
 }
 
+// takes the value as string and makes sure printing does not repeat infinitely when a wrong character/number is pressed
 void errorhandling(int a)
 {
     char option[100];
@@ -59,7 +63,8 @@ void errorhandling(int a)
 }
 
 void mode()
-{ // prints the difficulty options and scans input for choice
+{
+    // prints the difficulty options and scans input for choice
     printf(BYEL "\nMode\n" COLOR_RESET BBLU "[1] Easy\n" COLOR_RESET BRED "[2] Difficult\n" COLOR_RESET BGRN "[3] Back to Menu\n" COLOR_RESET);
     int diff_opt;
     scanf("%d", &diff_opt);
@@ -68,16 +73,20 @@ void mode()
     case 1:
     case 2:
         border(diff_opt);
+        break;
     case 3:
         main();
+        break;
     default:
         errorhandling(diff_opt);
         mode();
+        break;
     }
 }
 
 void instructions()
-{ // prints instructions and takes input to return to menu
+{
+    // prints instructions and takes input to return to menu
     printf("Instructions\n"
            "Navigation\n"
            "Press W to go up\n"
@@ -93,8 +102,10 @@ void instructions()
            "Once the game starts, the player navigates through the map and collects all the food (F). Each food eaten adds one body to the snake. When all the food has been eaten, an exit will open. The player wins when the whole snake exits the map.\n"
            "Hitting the walls, the snake's own body, or the blocks (B) will end the game.\n\n"
            "Press 1 Back\n");
+
     int instruct_opt;
     scanf("%d", &instruct_opt);
+
     switch (instruct_opt)
     {
     case 1:
@@ -364,9 +375,11 @@ void movement(int F, int snake_x[], int snake_y[])
         case 'S':
         case 's':
             gameover();
+            break;
         case 'M':
         case 'm':
             main(); // returns to menu
+            break;
         default:
             n = sizeof(move); // converts character into number for errorhandling
             errorhandling(n);
